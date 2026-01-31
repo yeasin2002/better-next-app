@@ -35,8 +35,6 @@ better-next-app/
 └── templates/             # Embedded template files
     ├── app/               # App Router templates
     ├── app-tw/            # App Router + Tailwind
-    ├── default/           # Pages Router templates
-    └── default-tw/        # Pages Router + Tailwind
 ```
 
 ## Key Architectural Principles

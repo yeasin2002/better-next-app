@@ -13,7 +13,8 @@ Better Next App is a high-performance CLI tool for scaffolding Next.js projects,
 ## Core Features
 
 - Interactive and non-interactive modes
-- Multiple templates (App Router, Pages Router, with/without Tailwind)
+- Multiple templates (App Router, with/without Tailwind)
+- this CLI dosen't support nextjs page router, only work with nextjs app router
 - Smart package manager detection (npm, pnpm, yarn, bun)
 - Flexible configuration (TypeScript, ESLint, Biome, React Compiler)
 - GitHub example downloading

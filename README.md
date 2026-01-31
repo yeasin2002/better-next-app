@@ -13,14 +13,27 @@ A modern, high-performance CLI tool for scaffolding Next.js projects, written in
 ## Features
 
 - ✨ **Interactive or Non-Interactive** - Use prompts or CLI flags
-- 🎨 **Multiple Templates** - App Router, Pages Router, with/without Tailwind
+- 🎨 **App Router Only** - Focused on Next.js App Router with/without Tailwind
 - 📦 **Smart Package Manager Detection** - Auto-detects npm, pnpm, yarn, or bun
 - 🔧 **Flexible Configuration** - TypeScript, ESLint, Biome, React Compiler support
 - 🌐 **GitHub Examples** - Download official examples or custom repositories
 - 💾 **Preference Persistence** - Save your choices for future projects
-- 🎯 **Full Feature Parity** - All features from the original TypeScript version
+- 🚀 **Future Extensibility** - Planned support for database integration, ORM, and more
 
 ## Installation
+
+### Using Package Managers
+
+```bash
+# npm
+npx create better-next-app@latest
+
+# pnpm
+pnpm dlx create better-next-app@latest
+
+# bun
+bunx create better-next-app@latest
+```
 
 ### Using Go Install
 
@@ -45,13 +58,35 @@ go build -o better-next-app
 ### Interactive Mode
 
 ```bash
-better-next-app my-app
+npx create better-next-app@latest
+```
+
+On installation, you'll see the following prompts:
+
+```
+What is your project named? my-app
+Would you like to use the recommended Next.js defaults?
+    Yes, use recommended defaults - TypeScript, ESLint, Tailwind CSS, App Router, Turbopack
+    No, reuse previous settings
+    No, customize settings - Choose your own preferences
+```
+
+If you choose to customize settings, you'll see:
+
+```
+Would you like to use TypeScript? No / Yes
+Which linter would you like to use? ESLint / Biome / None
+Would you like to use React Compiler? No / Yes
+Would you like to use Tailwind CSS? No / Yes
+Would you like your code inside a `src/` directory? No / Yes
+Would you like to customize the import alias (`@/*` by default)? No / Yes
+What import alias would you like configured? @/*
 ```
 
 ### Non-Interactive Mode
 
 ```bash
-better-next-app my-app --typescript --tailwind --app --eslint
+better-next-app my-app --typescript --tailwind --eslint
 ```
 
 ### Using Examples
@@ -69,11 +104,12 @@ better-next-app my-app --example https://github.com/user/repo
 ### Project Configuration
 
 - `--typescript` / `--javascript` - Language choice
-- `--app` / `--pages` - Router type (App Router or Pages Router)
 - `--tailwind` / `--no-tailwind` - Include Tailwind CSS
 - `--src-dir` / `--no-src-dir` - Use `src/` directory
 - `--import-alias <string>` - Custom import alias (default: `@/*`)
 - `--empty` - Minimal template with no boilerplate
+
+> Note: This CLI only supports Next.js App Router. Pages Router is not supported.
 
 ### Linting & Tools
 
@@ -183,6 +219,14 @@ Contributions are welcome! Please read the [PROJECT-GUIDE.md](./PROJECT-GUIDE.md
 
 MIT
 
+## Roadmap
+
+Future enhancements planned:
+- Database integration options
+- ORM setup (Prisma, Drizzle, etc.)
+- Authentication scaffolding
+- Additional tooling integrations
+
 ## Acknowledgments
 
-This project is inspired by and maintains feature parity with [create-next-app](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) from the Next.js team.
+This project is inspired by and maintains feature parity with [create-next-app](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) from the Next.js team, with a focus on App Router and modern Next.js development.
