@@ -19,3 +19,47 @@ Better Next App is a high-performance CLI tool for scaffolding Next.js projects,
 - GitHub example downloading
 - Preference persistence
 - Full feature parity with the original TypeScript version
+
+
+## How people will use it: 
+
+##### npm
+```shell
+npx create better-next-app@@latest 
+```
+
+##### bun
+```shell
+bunx  create better-next-app@@latest 
+```
+
+##### pnpm
+```shell
+pnpm dlx create better-next-app@@latest 
+```
+
+
+#### Process 
+On installation, you'll see the following prompts:
+
+```terminal
+What is your project named? my-app
+Would you like to use the recommended Next.js defaults?
+    Yes, use recommended defaults - TypeScript, ESLint, Tailwind CSS, App Router, Turbopack
+    No, reuse previous settings
+    No, customize settings - Choose your own preferences
+```
+
+If you choose to customize settings, you'll see the following prompts:
+
+```
+Would you like to use TypeScript? No / Yes
+Which linter would you like to use? ESLint / Biome / None
+Would you like to use React Compiler? No / Yes
+Would you like to use Tailwind CSS? No / Yes
+Would you like your code inside a `src/` directory? No / Yes
+Would you like to customize the import alias (`@/*` by default)? No / Yes
+What import alias would you like configured? @/*
+```
+
+Note: will will be expended, write now we will create this way but in feature will be add new feature like adding database, OTM etc. 
