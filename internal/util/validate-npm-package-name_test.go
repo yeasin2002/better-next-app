@@ -21,11 +21,8 @@ func TestValidateNpmPackageName_ValidNames(t *testing.T) {
 	for _, name := range validNames {
 		t.Run(name, func(t *testing.T) {
 			result := ValidateNpmPackageName(name)
-			if !result.ValidForNewPackages {
-				t.Errorf("Expected %q to be valid for new packages, got errors: %v", name, result.Errors)
-			}
-			if !result.ValidForOldPackages {
-				t.Errorf("Expected %q to be valid for old packages", name)
+			if !result.Valid {
+				t.Errorf("Expected %q to be valid, got errors: %v", name, result.Errors)
 			}
 			if len(result.Errors) > 0 {
 				t.Errorf("Expected no errors for %q, got: %v", name, result.Errors)
@@ -55,41 +52,18 @@ func TestValidateNpmPackageName_InvalidNames(t *testing.T) {
 		{"stream", "name cannot be a core module or reserved name"},
 		{"node_modules", "name cannot be a core module or reserved name"},
 		{"favicon.ico", "name cannot be a core module or reserved name"},
+		{"UpperCase", "name cannot contain uppercase letters"},
+		{"MixedCase-Package", "name cannot contain uppercase letters"},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			result := ValidateNpmPackageName(tt.name)
-			if result.ValidForNewPackages {
-				t.Errorf("Expected %q to be invalid for new packages", tt.name)
+			if result.Valid {
+				t.Errorf("Expected %q to be invalid", tt.name)
 			}
 			if len(result.Errors) == 0 {
 				t.Errorf("Expected errors for %q, got none", tt.name)
-			}
-		})
-	}
-}
-
-func TestValidateNpmPackageName_LegacyNames(t *testing.T) {
-	tests := []struct {
-		name            string
-		expectedWarning string
-	}{
-		{"UpperCase", "name can no longer contain capital letters"},
-		{"MixedCase-Package", "name can no longer contain capital letters"},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			result := ValidateNpmPackageName(tt.name)
-			if result.ValidForNewPackages {
-				t.Errorf("Expected %q to be invalid for new packages", tt.name)
-			}
-			if result.ValidForOldPackages {
-				// Should be valid for old packages (legacy)
-				if len(result.Warnings) == 0 {
-					t.Errorf("Expected warnings for %q, got none", tt.name)
-				}
 			}
 		})
 	}
@@ -99,12 +73,12 @@ func TestValidateNpmPackageName_TooLong(t *testing.T) {
 	// Create a name longer than 214 characters
 	longName := strings.Repeat("a", 215)
 	result := ValidateNpmPackageName(longName)
-
-	if result.ValidForNewPackages {
-		t.Error("Expected long name to be invalid for new packages")
+	
+	if result.Valid {
+		t.Error("Expected long name to be invalid")
 	}
-	if len(result.Warnings) == 0 {
-		t.Error("Expected warning about length")
+	if len(result.Errors) == 0 {
+		t.Error("Expected error about length")
 	}
 }
 
@@ -125,9 +99,9 @@ func TestValidateNpmPackageName_ScopedPackages(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			result := ValidateNpmPackageName(tt.name)
-			if result.ValidForNewPackages != tt.valid {
+			if result.Valid != tt.valid {
 				t.Errorf("Expected %q valid=%v, got valid=%v, errors: %v",
-					tt.name, tt.valid, result.ValidForNewPackages, result.Errors)
+					tt.name, tt.valid, result.Valid, result.Errors)
 			}
 			if tt.hasError && len(result.Errors) == 0 {
 				t.Errorf("Expected errors for %q, got none", tt.name)
