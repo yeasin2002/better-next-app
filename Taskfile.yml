@@ -86,3 +86,7 @@ tasks:
       - go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
       - go install golang.org/x/tools/cmd/goimports@latest
       - task: deps
+      - echo "Installing Lefthook..."
+      - go install github.com/evilmartians/lefthook@latest
+      - lefthook install
+      - echo "Setup complete!"

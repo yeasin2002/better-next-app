@@ -16,9 +16,16 @@ Thanks for your interest in contributing! This guide will help you get started.
 git clone https://github.com/yourusername/better-next-app.git
 cd better-next-app
 
-# Install tools and dependencies
+# Install tools, dependencies, and setup git hooks
 task setup
 ```
+
+This will install:
+- golangci-lint (linter)
+- goimports (import formatter)
+- Lefthook (git hooks manager)
+- All Go dependencies
+- Git pre-commit hooks
 
 ### 2. Development Workflow
 
@@ -98,15 +105,20 @@ task --list
    task dev -- test-app --yes --skip-install
    ```
 
-4. **Run checks**
-   ```bash
-   task check
-   ```
-
-5. **Commit and push**
+4. **Commit** (pre-commit hooks will run automatically)
    ```bash
    git add .
    git commit -m "feat: add my feature"
+   ```
+   
+   The pre-commit hook will:
+   - Format your code
+   - Run go vet
+   - Run linter
+   - Run tests
+
+5. **Push** (pre-push hook will run full checks)
+   ```bash
    git push origin feature/my-feature
    ```
 
@@ -173,6 +185,16 @@ chore: update dependencies
 ```
 
 ## Troubleshooting
+
+### Lefthook not running
+
+```bash
+# Reinstall hooks
+lefthook install
+
+# Or skip hooks temporarily
+git commit --no-verify
+```
 
 ### Task not found
 

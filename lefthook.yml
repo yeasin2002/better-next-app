@@ -1,0 +1,35 @@
+# Lefthook configuration for better-next-app
+# https://github.com/evilmartians/lefthook
+
+# Pre-commit hooks
+pre-commit:
+  parallel: true
+  
+  commands:
+    # Format code
+    format:
+      glob: "*.go"
+      run: task fmt
+      stage_fixed: true
+
+    # Run go vet
+    vet:
+      glob: "*.go"
+      run: task vet
+
+    # Run linter
+    lint:
+      glob: "*.go"
+      run: task lint
+
+    # Run tests
+    test:
+      glob: "*.go"
+      run: task test
+
+# Pre-push hooks
+pre-push:
+  commands:
+    # Run full check before push
+    check:
+      run: task check
