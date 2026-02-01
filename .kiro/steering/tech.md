@@ -8,11 +8,15 @@
 ## Core Dependencies
 
 - **Cobra** - CLI framework for argument parsing and command structure
-- **Viper** - Configuration management and user preference persistence
 - **Huh** - Interactive terminal prompts (replaces `prompts` from TypeScript)
 - **Lipgloss** - Terminal styling and colors (replaces `picocolors`)
 - **Doublestar** - File globbing patterns (replaces `fast-glob`)
 - **Go-git** (optional) - Git operations
+
+## Dev Dependencies
+- **task** - A fast, cross-platform build tool inspired by Make, designed for modern workflows. (github: https://github.com/go-task/task)
+- **goreleaser** - GoReleaser is a tool that automatically builds, packages, and publishes your Go application releases so you do not have to handle the process manually
+- **Github CI/CD** - for release automation and workflow management and creating PR and issue templates 
 
 ## Build System
 

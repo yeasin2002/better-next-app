@@ -1,14 +1,11 @@
+/*
+Copyright © 2026 Md Kawsar Islam Yeasin <mdkawsarislam2002@gmail.com>
+*/
+
 package main
 
-import (
-	"fmt"
-
-	"github.com/yeasin2002/better-next-app/internal/util"
-)
+import "github.com/yeasin2002/better-next-app/cmd"
 
 func main() {
-	fmt.Println("better-next-app")
-    data :=util.ValidateNpmPackageName("he llo")
- 	fmt.Println(data)
-
+	cmd.Execute()
 }
