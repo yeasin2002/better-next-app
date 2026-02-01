@@ -1,0 +1,88 @@
+version: '3'
+
+vars:
+  BINARY_NAME: better-next-app
+  BUILD_DIR: ./bin
+
+env:
+  GO111MODULE: on
+  CGO_ENABLED: 0
+
+tasks:
+  default:
+    desc: Show available tasks
+    cmds:
+      - task --list
+    silent: true
+
+  # Development
+  dev:
+    desc: Run the application
+    cmds:
+      - go run main.go {{.CLI_ARGS}}
+
+  # Build
+  build:
+    desc: Build for current platform
+    cmds:
+      - mkdir -p {{.BUILD_DIR}}
+      - go build -o {{.BUILD_DIR}}/{{.BINARY_NAME}} .
+
+  build:all:
+    desc: Build for all platforms
+    cmds:
+      - mkdir -p {{.BUILD_DIR}}
+      - GOOS=linux GOARCH=amd64 go build -o {{.BUILD_DIR}}/{{.BINARY_NAME}}-linux .
+      - GOOS=darwin GOARCH=amd64 go build -o {{.BUILD_DIR}}/{{.BINARY_NAME}}-darwin .
+      - GOOS=darwin GOARCH=arm64 go build -o {{.BUILD_DIR}}/{{.BINARY_NAME}}-darwin-arm64 .
+      - GOOS=windows GOARCH=amd64 go build -o {{.BUILD_DIR}}/{{.BINARY_NAME}}.exe .
+
+  # Dependencies
+  deps:
+    desc: Download dependencies
+    cmds:
+      - go mod download
+
+  # Testing
+  test:
+    desc: Run tests
+    cmds:
+      - go test -v ./...
+
+  # Code quality
+  fmt:
+    desc: Format code
+    cmds:
+      - go fmt ./...
+
+  lint:
+    desc: Run linter
+    cmds:
+      - golangci-lint run ./...
+
+  vet:
+    desc: Run go vet
+    cmds:
+      - go vet ./...
+
+  check:
+    desc: Run all checks
+    cmds:
+      - task: fmt
+      - task: vet
+      - task: lint
+      - task: test
+
+  # Cleaning
+  clean:
+    desc: Clean build artifacts
+    cmds:
+      - rm -rf {{.BUILD_DIR}}
+
+  # Setup
+  setup:
+    desc: Setup development environment
+    cmds:
+      - go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+      - go install golang.org/x/tools/cmd/goimports@latest
+      - task: deps
