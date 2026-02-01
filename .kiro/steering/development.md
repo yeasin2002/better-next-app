@@ -20,9 +20,6 @@ task setup
 # Run in development mode
 task dev
 
-# Run with hot reload
-task dev:watch
-
 # Build for current platform
 task build
 
@@ -35,106 +32,88 @@ task check
 ### Development
 
 - `task dev` - Run the application
-- `task dev:watch` - Run with hot reload (requires air)
 
 ### Building
 
 - `task build` - Build for current platform
 - `task build:all` - Build for Linux, macOS, Windows
-- `task build:linux` - Build for Linux only
-- `task build:darwin` - Build for macOS (Intel)
-- `task build:darwin-arm64` - Build for macOS (Apple Silicon)
-- `task build:windows` - Build for Windows
 
 ### Testing
 
 - `task test` - Run all tests
-- `task test:unit` - Run unit tests only
-- `task test:coverage` - Generate coverage report
-- `task test:bench` - Run benchmarks
 
 ### Code Quality
 
-- `task lint` - Run golangci-lint
-- `task lint:fix` - Auto-fix linting issues
 - `task fmt` - Format code
-- `task fmt:check` - Check if code is formatted
+- `task lint` - Run golangci-lint
 - `task vet` - Run go vet
 - `task check` - Run all checks (fmt, vet, lint, test)
 
 ### Dependencies
 
 - `task deps` - Download dependencies
-- `task deps:tidy` - Tidy dependencies
-- `task deps:update` - Update all dependencies
 
 ### Cleaning
 
-- `task clean` - Clean all artifacts and caches
-- `task clean:build` - Clean only build artifacts
+- `task clean` - Clean build artifacts
 
-### CI/CD
+### Setup
 
-- `task ci` - Run CI pipeline
-- `task ci:full` - Run full CI with cross-platform builds
+- `task setup` - Setup development environment (installs tools and git hooks)
 
 ## Code Quality Standards
 
 ### Linting
 
-The project uses golangci-lint with a balanced configuration:
+The project uses golangci-lint with a minimal configuration:
 
-- **Enabled linters**: errcheck, gosimple, govet, ineffassign, staticcheck, unused, gofmt, goimports, misspell, revive, gosec, gocritic, gocyclo, dupl, and more
+- **Enabled linters**: errcheck, gosimple, govet, ineffassign, staticcheck, unused, gofmt, goimports
 - **Cyclomatic complexity limit**: 15
-- **Security checks**: Enabled with reasonable exceptions for CLI tools
 
 ### Formatting
 
 - Use `gofmt` for formatting
 - Use `goimports` for import organization
-- Run `task fmt` before committing
+- Run `task fmt` before committing (or let git hooks do it)
 
 ### Testing
 
 - Write tests for all new features
-- Maintain test coverage above 70%
 - Use table-driven tests for multiple scenarios
-- Run `task test:coverage` to check coverage
+- Run `task test` to verify
 
 ## Pre-commit Checklist
 
-Before committing code, run:
+Git hooks automatically run before each commit:
+
+1. Format code (`task fmt`)
+2. Run go vet (`task vet`)
+3. Run golangci-lint (`task lint`)
+4. Run all tests (`task test`)
+
+You can also run manually:
 
 ```bash
 task check
 ```
 
-This will:
+## Git Hooks
 
-1. Check code formatting
-2. Run go vet
-3. Run golangci-lint
-4. Run all tests
+This project uses Lefthook for automatic code quality checks.
 
-## Hot Reload Development
+### Pre-commit (runs automatically)
+- Formats code
+- Runs vet
+- Runs linter
+- Runs tests
 
-Install air for hot reload:
+### Pre-push (runs automatically)
+- Runs full check suite
 
+### Skip hooks if needed
 ```bash
-go install github.com/air-verse/air@latest
-```
-
-Then run:
-
-```bash
-task dev:watch
-```
-
-## Building for Release
-
-```bash
-# Prepare release (runs all checks and builds for all platforms)
-task release:prepare
+git commit --no-verify
+git push --no-verify
 ```
 
 ## Troubleshooting
@@ -169,7 +148,17 @@ brew install golangci-lint
 go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 
 # Or run setup task
-task setup:tools
+task setup
+```
+
+### Lefthook not running
+
+```bash
+# Reinstall hooks
+lefthook install
+
+# Or skip temporarily
+git commit --no-verify
 ```
 
 ### Build fails

@@ -8,15 +8,19 @@
 ## Core Dependencies
 
 - **Cobra** - CLI framework for argument parsing and command structure
+- **Viper** - Configuration management and user preference persistence
 - **Huh** - Interactive terminal prompts (replaces `prompts` from TypeScript)
 - **Lipgloss** - Terminal styling and colors (replaces `picocolors`)
 - **Doublestar** - File globbing patterns (replaces `fast-glob`)
-- **Go-git** (optional) - Git operations
 
-## Dev Dependencies
-- **task** - A fast, cross-platform build tool inspired by Make, designed for modern workflows. (github: https://github.com/go-task/task)
-- **goreleaser** - GoReleaser is a tool that automatically builds, packages, and publishes your Go application releases so you do not have to handle the process manually
-- **Github CI/CD** - for release automation and workflow management and creating PR and issue templates 
+## Development Tools
+
+- **Task** - Cross-platform task runner (replaces Make) - https://github.com/go-task/task
+- **golangci-lint** - Fast, parallel Go linter
+- **goimports** - Import formatter
+- **Lefthook** - Git hooks manager
+- **GoReleaser** - Automated release tool for Go applications
+- **GitHub Actions** - CI/CD for release automation and workflow management
 
 ## Build System
 
@@ -24,41 +28,52 @@
 
 ```bash
 # Install dependencies
-go mod download
+task deps
 
 # Run locally
-go run main.go my-test-app
+task dev
 
 # Build for current platform
-go build -o better-next-app
+task build
 
-# Build with optimizations (smaller binary)
-go build -ldflags="-s -w" -o better-next-app
+# Build for all platforms
+task build:all
 ```
 
 ### Cross-Platform Compilation
 
 ```bash
-# Linux
-GOOS=linux GOARCH=amd64 go build -o better-next-app-linux
+# All platforms at once
+task build:all
 
-# macOS (Intel)
-GOOS=darwin GOARCH=amd64 go build -o better-next-app-macos
-
-# macOS (Apple Silicon)
-GOOS=darwin GOARCH=arm64 go build -o better-next-app-macos-arm64
-
-# Windows
-GOOS=windows GOARCH=amd64 go build -o better-next-app.exe
+# Or individually with GOOS/GOARCH
+GOOS=linux GOARCH=amd64 go build -o better-next-app-linux .
+GOOS=darwin GOARCH=amd64 go build -o better-next-app-darwin .
+GOOS=darwin GOARCH=arm64 go build -o better-next-app-darwin-arm64 .
+GOOS=windows GOARCH=amd64 go build -o better-next-app.exe .
 ```
 
 ## Template System
 
 Templates are embedded at compile time using Go's `embed` directive, allowing single-binary distribution with no external file dependencies.
 
+## Code Quality
+
+### Linting
+
+Minimal golangci-lint configuration with essential linters:
+- errcheck, gosimple, govet, ineffassign, staticcheck, unused
+- gofmt, goimports
+
+### Git Hooks
+
+Lefthook manages pre-commit and pre-push hooks:
+- Pre-commit: format, vet, lint, test (runs in parallel)
+- Pre-push: full check suite
+
 ## Testing
 
-No test framework is currently configured. When adding tests, consider:
-- Standard library `testing` package
+Use standard library `testing` package:
 - Table-driven tests (Go idiom)
 - Test files with `_test.go` suffix
+- Run with `task test`
