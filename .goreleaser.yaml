@@ -1,0 +1,135 @@
+# GoReleaser configuration for better-next-app
+# Documentation: https://goreleaser.com
+
+version: 2
+
+before:
+  hooks:
+    # Run tests and checks before building
+    - go mod tidy
+    - go test ./...
+
+builds:
+  - id: better-next-app
+    main: ./main.go
+    binary: better-next-app
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    # Ignore arm64 on Windows (not commonly used)
+    ignore:
+      - goos: windows
+        goarch: arm64
+    ldflags:
+      - -s -w
+      - -X main.version={{.Version}}
+      - -X main.commit={{.Commit}}
+      - -X main.date={{.Date}}
+
+archives:
+  - id: default
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- .Version }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+    files:
+      - README.md
+      - LICENSE
+      - CONTRIBUTING.md
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^chore:'
+      - 'merge conflict'
+      - Merge pull request
+      - Merge remote-tracking branch
+      - Merge branch
+  groups:
+    - title: 'New Features'
+      regexp: '^.*?feat(\([[:word:]]+\))??!?:.+$'
+      order: 0
+    - title: 'Bug Fixes'
+      regexp: '^.*?fix(\([[:word:]]+\))??!?:.+$'
+      order: 1
+    - title: 'Performance Improvements'
+      regexp: '^.*?perf(\([[:word:]]+\))??!?:.+$'
+      order: 2
+    - title: 'Refactors'
+      regexp: '^.*?refactor(\([[:word:]]+\))??!?:.+$'
+      order: 3
+    - title: 'Other Changes'
+      order: 999
+
+release:
+  github:
+    owner: yeasin2002
+    name: better-next-app
+  draft: false
+  prerelease: auto
+  mode: replace
+  header: |
+    ## Better Next App {{ .Tag }}
+
+    A high-performance CLI tool for scaffolding Next.js projects.
+
+    ### Installation
+
+    #### npm
+    ```shell
+    npx create-better-next-app@latest
+    ```
+
+    #### bun
+    ```shell
+    bunx create-better-next-app@latest
+    ```
+
+    #### pnpm
+    ```shell
+    pnpm dlx create-better-next-app@latest
+    ```
+
+    ### What's Changed
+  footer: |
+    **Full Changelog**: https://github.com/yeasin2002/better-next-app/compare/{{ .PreviousTag }}...{{ .Tag }}
+
+# Uncomment when you want to publish to package managers
+# brews:
+#   - name: better-next-app
+#     repository:
+#       owner: yeasin2002
+#       name: homebrew-tap
+#     homepage: https://github.com/yeasin2002/better-next-app
+#     description: A high-performance CLI tool for scaffolding Next.js projects
+#     license: MIT
+#     install: |
+#       bin.install "better-next-app"
+
+# scoops:
+#   - name: better-next-app
+#     repository:
+#       owner: yeasin2002
+#       name: scoop-bucket
+#     homepage: https://github.com/yeasin2002/better-next-app
+#     description: A high-performance CLI tool for scaffolding Next.js projects
+#     license: MIT

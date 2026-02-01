@@ -79,6 +79,22 @@ tasks:
     cmds:
       - rm -rf {{.BUILD_DIR}}
 
+  # Release
+  release:
+    desc: Create a new release with GoReleaser
+    cmds:
+      - goreleaser release --clean
+
+  release:snapshot:
+    desc: Build a snapshot release (no git tag required)
+    cmds:
+      - goreleaser release --snapshot --clean
+
+  release:check:
+    desc: Check GoReleaser configuration
+    cmds:
+      - goreleaser check
+
   # Setup
   setup:
     desc: Setup development environment
@@ -89,4 +105,6 @@ tasks:
       - echo "Installing Lefthook..."
       - go install github.com/evilmartians/lefthook@latest
       - lefthook install
+      - echo "Installing GoReleaser..."
+      - go install github.com/goreleaser/goreleaser/v2@latest
       - echo "Setup complete!"

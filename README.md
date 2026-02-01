@@ -176,39 +176,62 @@ better-next-app/
 ### Prerequisites
 
 - Go 1.21 or higher
+- [Task](https://taskfile.dev) - Task runner (optional but recommended)
 
 ### Setup
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/better-next-app.git
+git clone https://github.com/yeasin2002/better-next-app.git
 cd better-next-app
 
-# Install dependencies
-go mod download
+# Setup development environment (installs tools and git hooks)
+task setup
 
-# Run locally
-go run main.go my-test-app
+# Or manually
+go mod download
 ```
 
-### Building
+### Common Tasks
 
 ```bash
+# Run locally
+task dev
+
 # Build for current platform
-go build -o better-next-app
+task build
 
-# Build with optimizations
-go build -ldflags="-s -w" -o better-next-app
+# Build for all platforms
+task build:all
 
-# Cross-compile for multiple platforms
-GOOS=linux GOARCH=amd64 go build -o better-next-app-linux
-GOOS=darwin GOARCH=amd64 go build -o better-next-app-macos
-GOOS=windows GOARCH=amd64 go build -o better-next-app.exe
+# Run tests
+task test
+
+# Run all checks (format, lint, test)
+task check
+
+# Test release locally (no git tag required)
+task release:snapshot
 ```
+
+### Releasing
+
+This project uses [GoReleaser](https://goreleaser.com) for automated releases:
+
+```bash
+# Create and push a tag
+git tag -a v0.1.0 -m "Release v0.1.0"
+git push origin v0.1.0
+
+# GitHub Actions will automatically build and release
+```
+
+See [docs/releasing.md](./docs/releasing.md) for detailed release instructions.
 
 ## Documentation
 
 - [PROJECT-GUIDE.md](./PROJECT-GUIDE.md) - Comprehensive implementation guide
+- [docs/releasing.md](./docs/releasing.md) - Release process and versioning
 - [Steering Rules](./.kiro/steering/) - Development guidelines and patterns
 
 ## Contributing

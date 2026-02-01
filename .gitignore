@@ -23,6 +23,9 @@ coverage.out
 better-next-app
 better-next-app-*
 
+# GoReleaser
+.goreleaser.yaml.lock
+
 # Dependency directories
 /vendor/
 
