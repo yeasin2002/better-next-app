@@ -73,7 +73,7 @@ func TestValidateNpmPackageName_TooLong(t *testing.T) {
 	// Create a name longer than 214 characters
 	longName := strings.Repeat("a", 215)
 	result := ValidateNpmPackageName(longName)
-	
+
 	if result.Valid {
 		t.Error("Expected long name to be invalid")
 	}
