@@ -3,7 +3,6 @@ module github.com/yeasin2002/better-next-app
 go 1.25.4
 
 require (
-	github.com/bmatcuk/doublestar/v4 v4.10.0
 	github.com/charmbracelet/huh v0.8.0
 	github.com/spf13/cobra v1.10.2
 	github.com/spf13/viper v1.21.0
