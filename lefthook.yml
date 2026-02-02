@@ -4,9 +4,9 @@
 # Commit message validation
 commit-msg:
   commands:
-    # Enforce Conventional Commits format using Task
+    # Enforce Conventional Commits format using commitlint
     conventional-commit:
-      run: task validate-commit-msg COMMIT_MSG_FILE={1}
+      run: commitlint lint --message {1}
 
 # Pre-commit hooks
 pre-commit:

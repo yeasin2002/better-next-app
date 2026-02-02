@@ -1,0 +1,83 @@
+# commitlint configuration for better-next-app
+# https://github.com/conventionalcommit/commitlint
+
+version: v0.10.1
+formatter: default
+
+rules:
+  - header-min-length
+  - header-max-length
+  - body-max-line-length
+  - footer-max-line-length
+  - type-enum
+  - description-min-length
+
+severity:
+  default: error
+
+settings:
+  # Header rules
+  header-min-length:
+    argument: 10
+  header-max-length:
+    argument: 100
+
+  # Type rules
+  type-enum:
+    argument:
+      - feat
+      - fix
+      - docs
+      - style
+      - refactor
+      - test
+      - chore
+      - perf
+      - ci
+      - build
+      - revert
+
+  # Scope rules (optional but restricted when used)
+  scope-enum:
+    argument:
+      - cli
+      - config
+      - prompt
+      - template
+      - util
+      - deps
+      - release
+    flags:
+      allow-empty: true
+
+  # Description rules
+  description-min-length:
+    argument: 3
+
+  # Body rules (optional)
+  body-max-line-length:
+    argument: 100
+
+  # Footer rules (optional)
+  footer-max-line-length:
+    argument: 100
+
+  # Disable unused rules
+  body-max-length:
+    argument: -1
+  body-min-length:
+    argument: 0
+  description-max-length:
+    argument: -1
+  footer-max-length:
+    argument: -1
+  footer-min-length:
+    argument: 0
+  scope-max-length:
+    argument: -1
+  scope-min-length:
+    argument: 0
+  type-max-length:
+    argument: -1
+  type-min-length:
+    argument: 0
