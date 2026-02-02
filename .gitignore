@@ -1,6 +1,10 @@
 # Lefthook
 lefthook-local.yml
 
+# commitlint
+.commitlint.local.yaml
+.commitlint.local.yml
+
 # Binaries for programs and plugins
 *.exe
 *.exe~

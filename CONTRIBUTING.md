@@ -23,9 +23,11 @@ task setup
 This will install:
 - golangci-lint (linter)
 - goimports (import formatter)
+- commitlint (commit message validator)
 - Lefthook (git hooks manager)
+- GoReleaser (release tool)
 - All Go dependencies
-- Git pre-commit hooks
+- Git hooks (pre-commit, commit-msg, pre-push)
 
 ### 2. Development Workflow
 
@@ -117,12 +119,15 @@ task --list
    - `docs:` - Documentation
    - `test:` - Tests
    - `chore:` - Maintenance
+   - `refactor:` - Code refactoring
+   - `perf:` - Performance improvements
+   - `ci:` - CI/CD changes
+   - `build:` - Build system changes
    
-   Then pre-commit hooks will:
-   - Format your code
-   - Run go vet
-   - Run linter
-   - Run tests
+   Git hooks will automatically:
+   - **commit-msg**: Validate commit message format with commitlint
+   - **pre-commit**: Format code, run vet, run linter, run tests
+   - **pre-push**: Run full check suite
 
 5. **Push** (pre-push hook will run full checks)
    ```bash
@@ -179,17 +184,29 @@ task --list
 
 ### Commit Messages
 
-Follow [Conventional Commits](https://www.conventionalcommits.org/):
+Follow [Conventional Commits](https://www.conventionalcommits.org/) format enforced by commitlint:
 
 ```
+<type>(<scope>): <subject>
+
+# Examples:
 feat: add new feature
-fix: resolve bug
-docs: update documentation
-style: format code
-refactor: restructure code
-test: add tests
-chore: update dependencies
+fix(template): resolve bug in template copying
+docs: update README with installation steps
+test(util): add unit tests for validation
+chore(deps): update dependencies
 ```
+
+**Allowed types**: feat, fix, docs, style, refactor, test, chore, perf, ci, build, revert
+
+**Allowed scopes** (optional): cli, config, prompt, template, util, deps, release
+
+**Rules**:
+- Header: 10-100 characters
+- Description: minimum 3 characters
+- Body/footer lines: max 100 characters
+
+See [docs/git-hooks.md](./docs/git-hooks.md) for detailed commit message guidelines.
 
 ## Troubleshooting
 
@@ -201,6 +218,18 @@ lefthook install
 
 # Or skip hooks temporarily
 git commit --no-verify
+```
+
+### commitlint not found
+
+```bash
+# Install via Task
+task setup
+
+# Or manually
+go install github.com/conventionalcommit/commitlint@latest
+
+# Ensure $GOPATH/bin is in your PATH
 ```
 
 ### Task not found
