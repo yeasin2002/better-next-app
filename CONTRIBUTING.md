@@ -105,13 +105,20 @@ task --list
    task dev -- test-app --yes --skip-install
    ```
 
-4. **Commit** (pre-commit hooks will run automatically)
+4. **Commit** (hooks will validate your message and run checks)
    ```bash
    git add .
    git commit -m "feat: add my feature"
    ```
    
-   The pre-commit hook will:
+   Commit message must follow [Conventional Commits](https://www.conventionalcommits.org/):
+   - `feat:` - New feature
+   - `fix:` - Bug fix
+   - `docs:` - Documentation
+   - `test:` - Tests
+   - `chore:` - Maintenance
+   
+   Then pre-commit hooks will:
    - Format your code
    - Run go vet
    - Run linter

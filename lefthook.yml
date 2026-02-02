@@ -1,6 +1,13 @@
 # Lefthook configuration for better-next-app
 # https://github.com/evilmartians/lefthook
 
+# Commit message validation
+commit-msg:
+  commands:
+    # Enforce Conventional Commits format using Task
+    conventional-commit:
+      run: task validate-commit-msg COMMIT_MSG_FILE={1}
+
 # Pre-commit hooks
 pre-commit:
   parallel: true

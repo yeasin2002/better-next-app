@@ -20,6 +20,44 @@ Or manually:
 lefthook install
 ```
 
+## Commit Message Hook
+
+Enforces [Conventional Commits](https://www.conventionalcommits.org/) format:
+
+```
+<type>(<scope>): <subject>
+```
+
+### Allowed Types
+
+- **feat** - A new feature
+- **fix** - A bug fix
+- **docs** - Documentation changes
+- **style** - Code style changes (formatting, etc.)
+- **refactor** - Code refactoring
+- **test** - Adding or updating tests
+- **chore** - Maintenance tasks
+- **perf** - Performance improvements
+- **ci** - CI/CD changes
+- **build** - Build system changes
+- **revert** - Revert a previous commit
+
+### Examples
+
+```bash
+# Good commits
+git commit -m "feat: add user authentication"
+git commit -m "fix(api): resolve null pointer error"
+git commit -m "docs: update README with installation steps"
+git commit -m "test: add unit tests for config module"
+git commit -m "chore: update dependencies"
+
+# Bad commits (will be rejected)
+git commit -m "added new feature"
+git commit -m "Fixed bug"
+git commit -m "WIP"
+```
+
 ## Pre-commit Hooks
 
 Runs automatically before each commit:
@@ -42,6 +80,9 @@ Runs automatically before pushing:
 If you need to skip hooks temporarily:
 
 ```bash
+# Skip commit-msg validation
+git commit --no-verify -m "WIP: work in progress"
+
 # Skip pre-commit hooks
 git commit --no-verify
 
@@ -62,5 +103,6 @@ If hooks aren't running:
 lefthook install
 
 # Check hook status
+lefthook run commit-msg
 lefthook run pre-commit
 ```

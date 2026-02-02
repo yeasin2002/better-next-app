@@ -108,3 +108,32 @@ tasks:
       - echo "Installing GoReleaser..."
       - go install github.com/goreleaser/goreleaser/v2@latest
       - echo "Setup complete!"
+
+  # Git hooks helper
+  validate-commit-msg:
+    desc: Validate commit message format (used by git hooks)
+    vars:
+      COMMIT_MSG_FILE: '{{.COMMIT_MSG_FILE | default ".git/COMMIT_EDITMSG"}}'
+    cmds:
+      - |
+        if grep -qE "^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert)(\([a-zA-Z0-9_-]+\))?: .+" "{{.COMMIT_MSG_FILE}}"; then
+          exit 0
+        else
+          echo ""
+          echo "❌ Invalid commit message format!"
+          echo ""
+          echo "Commit message must follow Conventional Commits:"
+          echo "  <type>(<scope>): <subject>"
+          echo ""
+          echo "Types: feat, fix, docs, style, refactor, test, chore, perf, ci, build, revert"
+          echo ""
+          echo "Examples:"
+          echo "  feat: add user authentication"
+          echo "  fix(api): resolve null pointer error"
+          echo "  docs: update README"
+          echo ""
+          echo "Your message:"
+          cat "{{.COMMIT_MSG_FILE}}"
+          echo ""
+          exit 1
+        fi
