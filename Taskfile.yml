@@ -81,12 +81,11 @@ tasks:
 
   # Release
   tag:
-    desc: Create and push a new git tag (prompts for version)
-    prompt: What version do you want to tag? (e.g., v0.0.3)
+    desc: Create and push a new git tag (usage - task tag VERSION=v0.0.4)
     cmds:
-      - git tag -a {{.ANSWER}} -m "Release {{.ANSWER}}"
-      - git push origin {{.ANSWER}}
-      - echo "Tag {{.ANSWER}} created and pushed successfully!"
+      - git tag -a {{.VERSION}} -m "Release {{.VERSION}}"
+      - git push origin {{.VERSION}}
+      - echo "Tag {{.VERSION}} created and pushed successfully!"
 
   release:
     desc: Create a new release with GoReleaser
