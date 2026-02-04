@@ -1,0 +1,12 @@
+# Ignore everything except what we need
+*
+
+# Include necessary files
+!bin/
+!scripts/
+!package.json
+!README.md
+
+# Ignore binaries initially (they're downloaded on install)
+bin/*
+!bin/create-better-next-app.js

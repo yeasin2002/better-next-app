@@ -118,3 +118,25 @@ tasks:
       - echo "Installing GoReleaser..."
       - go install github.com/goreleaser/goreleaser/v2@latest
       - echo "Setup complete!"
+
+  # NPM Publishing
+  npm:setup:
+    desc: Setup NPM publishing (first time only)
+    cmds:
+      - cmd: bash scripts/npm-setup.sh
+        platforms: [linux, darwin]
+      - cmd: powershell -ExecutionPolicy Bypass -File scripts/npm-setup.ps1
+        platforms: [windows]
+
+  npm:test:
+    desc: Test NPM package locally
+    dir: npm
+    cmds:
+      - npm install
+      - node bin/create-better-next-app.js --help
+
+  npm:publish:
+    desc: Manually publish to NPM (use only if GitHub Actions fails)
+    dir: npm
+    cmds:
+      - npm publish --access public

@@ -22,35 +22,38 @@ A modern, high-performance CLI tool for scaffolding Next.js projects, written in
 
 ## Installation
 
-### Using Package Managers
+### Using Package Managers (Recommended)
 
 ```bash
 # npm
-npx create better-next-app@latest
+npx create-better-next-app@latest
 
 # pnpm
-pnpm dlx create better-next-app@latest
+pnpm dlx create-better-next-app@latest
 
 # bun
-bunx create better-next-app@latest
+bunx create-better-next-app@latest
+
+# yarn
+yarn create better-next-app
 ```
 
 ### Using Go Install
 
 ```bash
-go install github.com/yourusername/better-next-app@latest
+go install github.com/yeasin2002/better-next-app@latest
 ```
 
 ### Direct Download
 
-Download the latest binary for your platform from the [releases page](https://github.com/yourusername/better-next-app/releases).
+Download the latest binary for your platform from the [releases page](https://github.com/yeasin2002/better-next-app/releases).
 
 ### Build from Source
 
 ```bash
-git clone https://github.com/yourusername/better-next-app.git
+git clone https://github.com/yeasin2002/better-next-app.git
 cd better-next-app
-go build -o better-next-app
+task build
 ```
 
 ## Usage
