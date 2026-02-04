@@ -20,34 +20,137 @@ If you don't have an NPM account:
 
 ### 2. Generate NPM Access Token
 
+#### Step 2.1: Navigate to Access Tokens
+
 1. Log in to https://www.npmjs.com
-2. Click your profile picture → "Access Tokens"
-3. Click "Generate New Token" → "Classic Token"
-4. Select "Automation" type (for CI/CD)
-5. Copy the token (starts with `npm_...`)
+2. Click your profile picture (top right)
+3. Click "Access Tokens"
+4. Or go directly to: https://www.npmjs.com/settings/YOUR_USERNAME/tokens
+
+#### Step 2.2: Create New Token
+
+Click "Generate New Token" and select **"Granular Access Token"** (recommended for better security)
+
+#### Step 2.3: Configure Token Settings
+
+Fill in the token configuration:
+
+**Token name:**
+```
+better-next-app-ci
+```
+(or any descriptive name like "github-actions-publish")
+
+**Description (optional):**
+```
+GitHub Actions automation for publishing create-better-next-app
+```
+
+**Expiration:**
+- Select **"90 days"** or **"Custom"** with a longer duration
+- For production, consider 1 year and set a calendar reminder to rotate it
+- Avoid "No expiration" for security reasons
+
+**Packages and scopes - Permissions:**
+
+Select **"Read and write"** for:
+- ✅ **Packages and scopes** - This allows publishing packages
+
+**Organizations - Permissions:**
+
+Leave as **"No access"** (unless you're publishing under an organization)
+
+**Summary should show:**
+- Provide **read and write** access to packages and scopes
+- Expires on [your selected date]
+
+#### Step 2.4: Generate and Copy Token
+
+1. Click **"Generate token"**
+2. **IMPORTANT:** Copy the token immediately (starts with `npm_...`)
+3. Store it securely - you won't be able to see it again!
+
+Example token format: `npm_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
 
 ### 3. Add NPM Token to GitHub Secrets
 
-1. Go to your GitHub repository
-2. Navigate to Settings → Secrets and variables → Actions
-3. Click "New repository secret"
-4. Name: `NPM_TOKEN`
-5. Value: Paste your NPM token
-6. Click "Add secret"
+#### Step 3.1: Navigate to Repository Secrets
 
-### 4. Claim Package Name (First Time Only)
+1. Go to your repository: https://github.com/yeasin2002/better-next-app
+2. Click **Settings** (top menu)
+3. In the left sidebar, expand **Secrets and variables**
+4. Click **Actions**
+5. Or go directly to: https://github.com/yeasin2002/better-next-app/settings/secrets/actions
 
-Before your first release, run the setup task to verify everything:
+#### Step 3.2: Create New Secret
+
+1. Click **"New repository secret"** (green button)
+2. Fill in:
+   - **Name:** `NPM_TOKEN` (must be exactly this)
+   - **Secret:** Paste your NPM token (the one starting with `npm_...`)
+3. Click **"Add secret"**
+
+#### Step 3.3: Verify Secret
+
+You should see `NPM_TOKEN` listed under "Repository secrets" with:
+- Updated: Just now
+- A green checkmark indicating it's set
+
+### 4. Verify Setup with Task
+
+Run the setup task to verify everything is configured correctly:
 
 ```bash
-# Check NPM login and package availability
 task npm:setup
+```
 
-# If everything looks good, publish manually to claim the package name
+This will check:
+- ✓ NPM is installed
+- ✓ You're logged in to NPM
+- ✓ Package name is available (or you own it)
+
+### 5. Claim Package Name (First Time Only)
+
+Before your first automated release, manually publish to claim the package name:
+
+```bash
 task npm:publish
 ```
 
-This claims the package name on NPM. After this, GitHub Actions will handle all future releases automatically.
+This publishes the current version (v0.0.2) to NPM and reserves the package name for your account.
+
+**Expected output:**
+```
+Updated package.json to version 0.0.2
+npm notice Publishing to https://registry.npmjs.org/
++ create-better-next-app@0.0.2
+✅ Published to NPM successfully!
+```
+
+## Token Types Comparison
+
+### Granular Access Token (Recommended) ✅
+
+**Pros:**
+- Fine-grained permissions (only what you need)
+- Can scope to specific packages
+- Better security audit trail
+- Recommended by NPM for automation
+
+**Cons:**
+- Slightly more complex setup
+- Must configure permissions explicitly
+
+**Use for:** GitHub Actions, CI/CD pipelines
+
+### Classic Token (Legacy)
+
+**Types:**
+- **Automation:** For CI/CD (no 2FA required)
+- **Publish:** For publishing packages (requires 2FA)
+- **Read-only:** For downloading private packages
+
+**Note:** Classic tokens are being phased out. Use Granular tokens for new projects.
 
 ## How It Works
 

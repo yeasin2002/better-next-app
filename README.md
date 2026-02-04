@@ -230,7 +230,10 @@ task npm:test
 task npm:publish
 ```
 
-See [docs/npm-quick-start.md](./docs/npm-quick-start.md) for detailed NPM publishing instructions.
+**Documentation:**
+- Quick Start (5 min): [docs/npm-quick-start.md](./docs/npm-quick-start.md)
+- Token Generation Guide: [docs/npm-token-guide.md](./docs/npm-token-guide.md)
+- Full Guide: [docs/npm-publishing.md](./docs/npm-publishing.md)
 
 ### Releasing
 

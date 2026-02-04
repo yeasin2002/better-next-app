@@ -4,19 +4,21 @@ This is a condensed guide for setting up NPM publishing. For detailed informatio
 
 ## Prerequisites
 
-- Node.js and npm installed
-- NPM account created at https://www.npmjs.com/signup
-- Repository pushed to GitHub
+- ✅ Node.js and npm installed
+- ✅ NPM account created at https://www.npmjs.com/signup
+- ✅ Repository pushed to GitHub
 
 ## Setup (5 Minutes)
 
-### 1. Login to NPM
+### Step 1: Login to NPM
 
 ```bash
 npm login
 ```
 
-### 2. Verify Setup
+Enter your NPM username, password, and email when prompted.
+
+### Step 2: Verify Setup
 
 ```bash
 task npm:setup
@@ -27,28 +29,50 @@ This checks:
 - ✓ You're logged in
 - ✓ Package name is available (or you own it)
 
-### 3. Get NPM Token
+### Step 3: Generate NPM Token
 
-1. Go to https://www.npmjs.com/settings/YOUR_USERNAME/tokens
-2. Click "Generate New Token" → "Classic Token"
-3. Select "Automation" type
-4. Copy the token (starts with `npm_...`)
+**Need help?** See the detailed visual guide: [npm-token-guide.md](./npm-token-guide.md)
 
-### 4. Add Token to GitHub
+#### Quick Steps:
 
-1. Go to https://github.com/yeasin2002/better-next-app/settings/secrets/actions
-2. Click "New repository secret"
-3. Name: `NPM_TOKEN`
-4. Value: Paste your token
-5. Click "Add secret"
+1. **Go to:** https://www.npmjs.com/settings/YOUR_USERNAME/tokens
+2. **Click:** "Generate New Token"
+3. **Select:** "Granular Access Token" (not Classic)
+4. **Configure:**
+   - Token name: `better-next-app-ci`
+   - Expiration: `90 days` or `1 year`
+   - Packages permission: `Read and write` ✅
+   - Organizations permission: `No access`
+5. **Click:** "Generate token"
+6. **Copy:** The token immediately (starts with `npm_...`)
 
-### 5. Claim Package Name
+### Step 4: Add Token to GitHub
+
+#### 4.1 Navigate to Secrets
+
+Go to: https://github.com/yeasin2002/better-next-app/settings/secrets/actions
+
+#### 4.2 Create Secret
+
+1. Click **"New repository secret"**
+2. **Name:** `NPM_TOKEN` (exactly this, case-sensitive)
+3. **Secret:** Paste your NPM token
+4. Click **"Add secret"**
+
+### Step 5: Claim Package Name
 
 ```bash
 task npm:publish
 ```
 
-This publishes v0.0.2 to NPM and claims the package name.
+This publishes v0.0.2 to NPM and reserves the package name.
+
+**Expected output:**
+```
+Updated package.json to version 0.0.2
++ create-better-next-app@0.0.2
+✅ Published to NPM successfully!
+```
 
 ## Done! 🎉
 
@@ -59,16 +83,26 @@ git tag -a v0.1.0 -m "Release v0.1.0"
 git push origin v0.1.0
 ```
 
-## Testing
+## What Happens Next?
 
-Before releasing, test locally:
+When you push a tag:
+1. ⚙️ GitHub Actions triggers
+2. 🔨 GoReleaser builds binaries
+3. 📦 Creates GitHub release
+4. 🚀 Publishes to NPM automatically
+5. ✅ Users can install: `npx create-better-next-app@latest`
+
+## Testing Before Release
 
 ```bash
 # Preview package contents
 task npm:pack
 
-# Test installation
+# Test installation locally
 task npm:test
+
+# Check version sync
+task npm:version
 ```
 
 ## Common Commands
