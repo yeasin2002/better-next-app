@@ -217,6 +217,21 @@ task check
 task release:snapshot
 ```
 
+### NPM Publishing
+
+```bash
+# Setup NPM publishing (first time)
+task npm:setup
+
+# Test NPM package locally
+task npm:test
+
+# Publish to NPM manually
+task npm:publish
+```
+
+See [docs/npm-quick-start.md](./docs/npm-quick-start.md) for detailed NPM publishing instructions.
+
 ### Releasing
 
 This project uses [GoReleaser](https://goreleaser.com) for automated releases:

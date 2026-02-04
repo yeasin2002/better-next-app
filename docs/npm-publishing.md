@@ -37,19 +37,17 @@ If you don't have an NPM account:
 
 ### 4. Claim Package Name (First Time Only)
 
-Before your first release, publish manually to claim the package name:
+Before your first release, run the setup task to verify everything:
 
 ```bash
-cd npm
+# Check NPM login and package availability
+task npm:setup
 
-# Login to NPM
-npm login
-
-# Publish (this claims the package name)
-npm publish --access public
+# If everything looks good, publish manually to claim the package name
+task npm:publish
 ```
 
-After this, GitHub Actions will handle all future releases automatically.
+This claims the package name on NPM. After this, GitHub Actions will handle all future releases automatically.
 
 ## How It Works
 
@@ -110,15 +108,15 @@ git push origin v0.1.0
 If you need to publish manually:
 
 ```bash
-cd npm
-
-# Update version to match git tag
-npm version 0.1.0 --no-git-tag-version
-
-# Login to NPM (if not already logged in)
+# Ensure you're logged in
 npm login
 
-# Publish
+# Publish using Task (recommended)
+task npm:publish
+
+# Or manually
+cd npm
+npm version 0.1.0 --no-git-tag-version
 npm publish --access public
 ```
 
@@ -136,16 +134,14 @@ The GitHub Actions workflow automatically handles this synchronization.
 Before publishing, test the NPM package locally:
 
 ```bash
-cd npm
+# Preview what will be published
+task npm:pack
 
-# Install dependencies (downloads binary)
-npm install
+# Test installation and execution
+task npm:test
 
-# Test the CLI
-node bin/create-better-next-app.js --help
-
-# Or test with npx
-npx . my-test-app
+# Check version synchronization
+task npm:version
 ```
 
 ## Troubleshooting
@@ -153,6 +149,13 @@ npx . my-test-app
 ### "Package name already taken"
 
 If someone else claimed the package name:
+
+```bash
+# Check who owns it
+task npm:setup
+```
+
+If you don't own it:
 1. Choose a different name (e.g., `@yeasin2002/create-better-next-app`)
 2. Update `npm/package.json` → `name` field
 3. Update documentation
@@ -177,6 +180,15 @@ The binary isn't executable:
 2. Check token hasn't expired
 3. Ensure token has "Automation" permissions
 4. Verify package name isn't taken
+
+### Version mismatch
+
+If NPM version doesn't match git tag:
+
+```bash
+# Sync version automatically
+task npm:version
+```
 
 ## Package Maintenance
 
@@ -231,8 +243,36 @@ Consider adding:
 4. **Fallback mirrors**: Alternative download sources if GitHub is down
 5. **Version checking**: Warn users about outdated versions
 
-## Resources
+## Quick Reference
 
-- [NPM Publishing Guide](https://docs.npmjs.com/packages-and-modules/contributing-packages-to-the-registry)
-- [NPM Access Tokens](https://docs.npmjs.com/about-access-tokens)
-- [GitHub Actions NPM Publishing](https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages)
+### Available Tasks
+
+```bash
+# Setup and verification
+task npm:setup          # Check NPM login and package availability
+task npm:test           # Test package locally
+task npm:pack           # Preview package contents
+task npm:version        # Sync version with git tag
+
+# Publishing
+task npm:publish        # Publish to NPM manually
+```
+
+### First-Time Setup Checklist
+
+- [ ] Install Node.js and npm
+- [ ] Run `npm login`
+- [ ] Run `task npm:setup` to verify
+- [ ] Generate NPM token (Automation type)
+- [ ] Add `NPM_TOKEN` to GitHub Secrets
+- [ ] Run `task npm:publish` to claim package name
+- [ ] Create first release: `git tag -a v0.1.0 -m "Release v0.1.0" && git push origin v0.1.0`
+
+### Automated Release Workflow
+
+1. Push a git tag: `git push origin v0.1.0`
+2. GitHub Actions automatically:
+   - Builds binaries with GoReleaser
+   - Creates GitHub release
+   - Publishes to NPM registry
+3. Users can install: `npx create-better-next-app@latest`

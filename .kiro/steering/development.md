@@ -68,6 +68,14 @@ task check
 - `task release:snapshot` - Build a snapshot release (no git tag required)
 - `task release:check` - Check GoReleaser configuration
 
+### NPM Publishing
+
+- `task npm:setup` - Setup NPM publishing (first time only)
+- `task npm:test` - Test NPM package locally
+- `task npm:pack` - Preview what will be published to NPM
+- `task npm:version` - Update NPM package version to match git tag
+- `task npm:publish` - Manually publish to NPM (use only if GitHub Actions fails)
+
 ## Code Quality Standards
 
 ### Linting
