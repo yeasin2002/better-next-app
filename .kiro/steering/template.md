@@ -1,3 +1,7 @@
+---
+inclusion: always
+---
+
 # Template Structure
 
 ## Overview
@@ -23,10 +27,10 @@ templates/
 ├── app-api/                # API-only (no React components)
 │   ├── js/
 │   └── ts/
-├── .prettierrc.json        # Prettier config for templates
-├── index.ts                # Template index (TypeScript reference)
-└── types.ts                # Type definitions (TypeScript reference)
+└── .prettierrc.json        # Prettier config for templates
 ```
+
+Note: Templates are embedded into the Go binary at compile time using the `//go:embed templates` directive in `main.go`.
 
 ## Template Variants
 

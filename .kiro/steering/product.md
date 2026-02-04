@@ -1,3 +1,7 @@
+---
+inclusion: always
+---
+
 # Product Overview
 
 Better Next App is a high-performance CLI tool for scaffolding Next.js projects, written in Go. It's a complete rewrite of `create-next-app` that provides faster startup times, single binary distribution, and feature parity with the original TypeScript implementation.
@@ -13,12 +17,12 @@ Better Next App is a high-performance CLI tool for scaffolding Next.js projects,
 ## Core Features
 
 - Interactive and non-interactive modes
-- Multiple templates (App Router, with/without Tailwind)
-- this CLI dosen't support nextjs page router, only work with nextjs app router
+- Multiple templates (App Router, with/without Tailwind, minimal, API-only)
+- **App Router Only** - This CLI only supports Next.js App Router (Pages Router is not supported)
 - Smart package manager detection (npm, pnpm, yarn, bun)
 - Flexible configuration (TypeScript, ESLint, Biome, React Compiler)
 - GitHub example downloading
-- Preference persistence
+- Preference persistence using Viper
 - Full feature parity with the original TypeScript version
 
 
@@ -63,4 +67,4 @@ Would you like to customize the import alias (`@/*` by default)? No / Yes
 What import alias would you like configured? @/*
 ```
 
-Note: will will be expended, write now we will create this way but in feature will be add new feature like adding database, OTM etc. 
+Note: This will be expanded. Right now we create projects this way, but in the future we will add new features like database integration, ORM setup, authentication scaffolding, and more. 

@@ -61,6 +61,13 @@ task check
 
 - `task setup` - Setup development environment (installs tools and git hooks)
 
+### Release
+
+- `task tag` - Create and push a new git tag (prompts for version)
+- `task release` - Create a new release with GoReleaser
+- `task release:snapshot` - Build a snapshot release (no git tag required)
+- `task release:check` - Check GoReleaser configuration
+
 ## Code Quality Standards
 
 ### Linting
