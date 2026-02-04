@@ -231,10 +231,8 @@ task npm:publish
 ```
 
 **Documentation:**
-- Quick Start (5 min): [docs/npm-quick-start.md](./docs/npm-quick-start.md)
-- Token Generation Guide: [docs/npm-token-guide.md](./docs/npm-token-guide.md)
-- Full Guide: [docs/npm-publishing.md](./docs/npm-publishing.md)
-- Troubleshooting: [docs/TROUBLESHOOTING-NPM.md](./docs/TROUBLESHOOTING-NPM.md)
+- Complete Guide: [docs/npm-complete-guide.md](./docs/npm-complete-guide.md)
+- Token Generation: [docs/npm-token-guide.md](./docs/npm-token-guide.md)
 
 ### Releasing
 
@@ -254,6 +252,8 @@ See [docs/releasing.md](./docs/releasing.md) for detailed release instructions.
 
 - [PROJECT-GUIDE.md](./PROJECT-GUIDE.md) - Comprehensive implementation guide
 - [docs/releasing.md](./docs/releasing.md) - Release process and versioning
+- [docs/npm-complete-guide.md](./docs/npm-complete-guide.md) - Complete NPM publishing guide
+- [docs/npm-token-guide.md](./docs/npm-token-guide.md) - NPM token generation guide
 - [Steering Rules](./.kiro/steering/) - Development guidelines and patterns
 
 ## Contributing

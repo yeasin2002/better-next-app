@@ -449,21 +449,16 @@ NPM Website → Profile Picture (top right) → Access Tokens
 
 ### Step 2: Click "Generate New Token"
 
-You'll see two options:
+You'll see only one option now:
 
 ```
 ┌─────────────────────────────────────┐
-│  Granular Access Token              │  ← Choose this one! ✅
-│  (Recommended)                       │
-└─────────────────────────────────────┘
-
-┌─────────────────────────────────────┐
-│  Classic Token                       │  ← Don't use
-│  (Legacy)                            │
+│  Granular Access Token              │  ← Only option available ✅
+│  (Required for automation)           │
 └─────────────────────────────────────┘
 ```
 
-**Select:** Granular Access Token
+**Note:** Classic tokens are no longer available (permanently removed December 9, 2025).
 
 ### Step 3: Configure Token
 
@@ -512,6 +507,16 @@ Choose one:
 
 **Why?** This allows GitHub Actions to publish new versions of your package.
 
+**Bypass 2FA:** (New option)
+
+```
+┌─────────────────────────────────────┐
+│  ☑ Bypass 2FA for automation        │  ← Check this! ✅
+└─────────────────────────────────────┘
+```
+
+**Important:** Enable "Bypass 2FA" for CI/CD workflows. Without this, automated publishing will fail because GitHub Actions can't provide 2FA codes.
+
 **Select organizations:** (Optional)
 
 Leave empty unless you're publishing under an organization.
@@ -541,8 +546,9 @@ Before generating, verify the summary shows:
 ```
 This token will:
 ✓ Provide read and write access to packages and scopes
+✓ Bypass 2FA for automation (enabled)
 ✓ Provide read and write access to 0 organizations
-✓ Expires on [your selected date]
+✓ Expires in 90 days
 ```
 
 ### Step 5: Generate Token
@@ -610,14 +616,16 @@ Repository secrets
 
 Before proceeding, verify:
 
-- [ ] Token type: Granular Access Token
+- [ ] Token type: Granular Access Token (only option available)
 - [ ] Token name: Descriptive (e.g., `better-next-app-ci`)
-- [ ] Expiration: Set (90 days or 1 year)
+- [ ] Expiration: 90 days (maximum for write tokens)
 - [ ] Packages permission: Read and write
+- [ ] Bypass 2FA: Enabled (for CI/CD automation)
 - [ ] Organizations permission: No access
 - [ ] Token copied and saved securely
 - [ ] GitHub secret created with name `NPM_TOKEN`
 - [ ] GitHub secret contains full token (starts with `npm_`)
+- [ ] Calendar reminder set for token rotation (before 90 days)
 
 ## Testing Your Setup
 
@@ -653,11 +661,21 @@ Next steps:
 
 ## Common Mistakes to Avoid
 
-### ❌ Wrong Token Type
+### ❌ Using Session Tokens for CI/CD
 
-**Mistake:** Selecting "Classic Token"
+**Mistake:** Using `npm login` token for GitHub Actions
 
-**Fix:** Use "Granular Access Token" instead
+**Why it fails:** Session tokens expire after 2 hours
+
+**Fix:** Use Granular Access Token with "Bypass 2FA" enabled
+
+### ❌ Forgetting to Enable "Bypass 2FA"
+
+**Mistake:** Not checking "Bypass 2FA for automation"
+
+**Why it fails:** GitHub Actions can't provide 2FA codes
+
+**Fix:** Regenerate token with "Bypass 2FA" enabled
 
 ### ❌ Wrong Permissions
 
@@ -677,11 +695,11 @@ Next steps:
 
 **Fix:** Generate a new token (you can't retrieve the old one)
 
-### ❌ Token Expired
+### ❌ Token Expired (90 days)
 
 **Mistake:** Token expires and publishing fails
 
-**Fix:** Generate a new token and update GitHub secret
+**Fix:** Generate a new token and update GitHub secret (set reminder!)
 
 ## Troubleshooting
 
@@ -696,21 +714,31 @@ Next steps:
 
 ### "Insufficient permissions" when publishing
 
-**Cause:** Token doesn't have write permissions
+**Cause:** Token doesn't have write permissions or 2FA bypass
 
 **Fix:**
 1. Generate a new token
 2. Select "Read and write" for Packages and scopes
-3. Update GitHub secret with new token
+3. Enable "Bypass 2FA for automation"
+4. Update GitHub secret with new token
 
 ### "Token expired"
 
-**Cause:** Token expiration date passed
+**Cause:** Token expiration date passed (90 days maximum)
 
 **Fix:**
-1. Generate a new token with longer expiration
+1. Generate a new token (90 days expiration)
 2. Update GitHub secret with new token
-3. Set calendar reminder for next rotation
+3. Set calendar reminder for next rotation (before 90 days)
+
+### "2FA required" error in CI/CD
+
+**Cause:** "Bypass 2FA" not enabled on token
+
+**Fix:**
+1. Generate a new token
+2. Check "Bypass 2FA for automation"
+3. Update GitHub secret
 
 ### "Package not found" during publish
 
@@ -726,12 +754,24 @@ This claims the package name on NPM.
 ## Security Best Practices
 
 1. **Never commit tokens** to your repository
-2. **Use expiration dates** - Rotate tokens regularly
-3. **Use minimal permissions** - Only "Read and write" for packages
-4. **Store securely** - Use password manager for backup
-5. **Rotate regularly** - Set reminders to update tokens
-6. **Monitor usage** - Check NPM audit logs periodically
-7. **Revoke if compromised** - Delete token immediately if exposed
+2. **Use 90-day expiration** - Maximum allowed for write tokens
+3. **Set rotation reminders** - Update token before expiration
+4. **Use minimal permissions** - Only "Read and write" for packages
+5. **Enable "Bypass 2FA"** - Required for CI/CD automation
+6. **Store securely** - Use password manager for backup
+7. **Monitor usage** - Check NPM audit logs periodically
+8. **Revoke if compromised** - Delete token immediately if exposed
+
+## Token Rotation Schedule
+
+Since write tokens are limited to 90 days:
+
+1. **Day 1:** Generate token, add to GitHub secrets
+2. **Day 75:** Set reminder to rotate token
+3. **Day 85:** Generate new token, update GitHub secret
+4. **Day 90:** Old token expires (no disruption if rotated)
+
+**Pro tip:** Use a password manager or calendar app to track token expiration dates.
 
 ## Next Steps
 
@@ -742,10 +782,13 @@ After setting up your token:
 3. ✅ Publish first version: `task npm:publish`
 4. ✅ Create release: `git tag -a v0.1.0 -m "Release v0.1.0" && git push origin v0.1.0`
 5. ✅ Verify automated publishing works
+6. ✅ Set calendar reminder for token rotation (before 90 days)
 
 ## Resources
 
 - NPM Token Documentation: https://docs.npmjs.com/about-access-tokens
+- NPM CLI Token Management: https://docs.npmjs.com/cli/
+- NPM Security Update: https://github.blog/changelog/2025-12-09-npm-classic-tokens-revoked-session-based-auth-and-cli-token-management-now-available/
 - GitHub Secrets Documentation: https://docs.github.com/en/actions/security-guides/encrypted-secrets
-- Full Publishing Guide: [npm-publishing.md](./npm-publishing.md)
-- Quick Start: [npm-quick-start.md](./npm-quick-start.md)
+- OIDC Trusted Publishing: https://docs.npmjs.com/trusted-publishers
+- Full Publishing Guide: [npm-complete-guide.md](./npm-complete-guide.md)
