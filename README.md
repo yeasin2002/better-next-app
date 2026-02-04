@@ -234,6 +234,7 @@ task npm:publish
 - Quick Start (5 min): [docs/npm-quick-start.md](./docs/npm-quick-start.md)
 - Token Generation Guide: [docs/npm-token-guide.md](./docs/npm-token-guide.md)
 - Full Guide: [docs/npm-publishing.md](./docs/npm-publishing.md)
+- Troubleshooting: [docs/TROUBLESHOOTING-NPM.md](./docs/TROUBLESHOOTING-NPM.md)
 
 ### Releasing
 

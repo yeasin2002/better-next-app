@@ -209,6 +209,24 @@ tasks:
   npm:version:
     desc: Update NPM package version to match git tag
     dir: npm
+    cmds:
+      - task: npm:version:internal
+
+  npm:version:internal:
+    internal: true
+    dir: npm
+    platforms: [windows]
+    vars:
+      VERSION:
+        sh: git describe --tags --abbrev=0 2>nul | powershell -Command "$input -replace '^v', ''" || echo "0.0.2"
+    cmds:
+      - npm version {{.VERSION}} --no-git-tag-version --allow-same-version
+      - echo "Updated package.json to version {{.VERSION}}"
+
+  npm:version:internal:
+    internal: true
+    dir: npm
+    platforms: [linux, darwin]
     vars:
       VERSION:
         sh: git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//' || echo "0.0.2"
