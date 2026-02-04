@@ -1,0 +1,40 @@
+{
+  "name": "create-better-next-app",
+  "version": "0.0.2",
+  "description": "A high-performance CLI tool for scaffolding Next.js projects",
+  "bin": {
+    "create-better-next-app": "./bin/create-better-next-app.js"
+  },
+  "scripts": {
+    "postinstall": "node ./scripts/install.js"
+  },
+  "keywords": [
+    "nextjs",
+    "next",
+    "create-next-app",
+    "cli",
+    "scaffold",
+    "generator",
+    "app-router",
+    "typescript",
+    "tailwind"
+  ],
+  "author": "Md Kawsar Islam Yeasin <mdkawsarislam2002@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yeasin2002/better-next-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yeasin2002/better-next-app/issues"
+  },
+  "homepage": "https://github.com/yeasin2002/better-next-app#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "files": [
+    "bin",
+    "scripts",
+    "README.md"
+  ]
+}

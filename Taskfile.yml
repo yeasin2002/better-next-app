@@ -118,3 +118,111 @@ tasks:
       - echo "Installing GoReleaser..."
       - go install github.com/goreleaser/goreleaser/v2@latest
       - echo "Setup complete!"
+
+  # NPM Publishing
+  npm:setup:
+    desc: Setup NPM publishing (first time only)
+    cmds:
+      - task: npm:check-npm
+      - task: npm:check-login
+      - task: npm:check-package
+      - task: npm:show-instructions
+
+  npm:check-npm:
+    internal: true
+    silent: true
+    preconditions:
+      - sh: command -v npm
+        msg: "npm is not installed. Please install Node.js from https://nodejs.org/"
+
+  npm:check-login:
+    internal: true
+    cmds:
+      - |
+        if ! npm whoami &>/dev/null 2>&1; then
+          echo "⚠️  You are not logged in to NPM"
+          echo "Please run: npm login"
+          exit 1
+        fi
+        echo "✓ Logged in as: $(npm whoami)"
+
+  npm:check-package:
+    internal: true
+    cmds:
+      - |
+        PACKAGE_NAME="create-better-next-app"
+        NPM_USER=$(npm whoami)
+        
+        if npm view $PACKAGE_NAME &>/dev/null 2>&1; then
+          OWNER=$(npm view $PACKAGE_NAME maintainers --json 2>/dev/null | grep -o '"name":"[^"]*"' | head -1 | cut -d'"' -f4)
+          echo "⚠️  Package '$PACKAGE_NAME' already exists (owner: $OWNER)"
+          
+          if [ "$OWNER" != "$NPM_USER" ]; then
+            echo ""
+            echo "❌ You don't own this package. Options:"
+            echo "   1. Use a scoped package: @$NPM_USER/$PACKAGE_NAME"
+            echo "   2. Choose a different package name"
+            exit 1
+          fi
+          echo "✓ You own this package - you can publish updates"
+        else
+          echo "✓ Package name '$PACKAGE_NAME' is available"
+        fi
+
+  npm:show-instructions:
+    internal: true
+    cmds:
+      - |
+        NPM_USER=$(npm whoami)
+        echo ""
+        echo "=========================================="
+        echo "✅ Setup Complete!"
+        echo ""
+        echo "Next steps:"
+        echo ""
+        echo "1. Add NPM_TOKEN to GitHub Secrets:"
+        echo "   - Go to: https://github.com/yeasin2002/better-next-app/settings/secrets/actions"
+        echo "   - Create secret: NPM_TOKEN"
+        echo "   - Get token from: https://www.npmjs.com/settings/$NPM_USER/tokens"
+        echo ""
+        echo "2. Create your first release:"
+        echo "   git tag -a v0.1.0 -m 'Release v0.1.0'"
+        echo "   git push origin v0.1.0"
+        echo ""
+        echo "3. Or publish manually now:"
+        echo "   task npm:publish"
+        echo ""
+
+  npm:test:
+    desc: Test NPM package locally
+    dir: npm
+    cmds:
+      - npm install
+      - node bin/create-better-next-app.js --help
+
+  npm:pack:
+    desc: Preview what will be published to NPM
+    dir: npm
+    cmds:
+      - npm pack --dry-run
+
+  npm:version:
+    desc: Update NPM package version to match git tag
+    dir: npm
+    vars:
+      VERSION:
+        sh: git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//' || echo "0.0.2"
+    cmds:
+      - npm version {{.VERSION}} --no-git-tag-version --allow-same-version
+      - echo "Updated package.json to version {{.VERSION}}"
+
+  npm:publish:
+    desc: Manually publish to NPM (use only if GitHub Actions fails)
+    dir: npm
+    preconditions:
+      - sh: npm whoami
+        msg: "Not logged in to NPM. Run: npm login"
+    cmds:
+      - task: npm:version
+      - npm publish --access public
+      - echo "✅ Published to NPM successfully!"
