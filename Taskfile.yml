@@ -200,6 +200,12 @@ tasks:
       - npm install
       - node bin/create-better-next-app.js --help
 
+  npm:test-platform:
+    desc: Test platform detection for NPM package
+    dir: npm
+    cmds:
+      - node scripts/test-install.js
+
   npm:pack:
     desc: Preview what will be published to NPM
     dir: npm
@@ -210,9 +216,10 @@ tasks:
     desc: Update NPM package version to match git tag
     dir: npm
     cmds:
-      - task: npm:version:internal
+      - task: npm:version:windows
+      - task: npm:version:unix
 
-  npm:version:internal:
+  npm:version:windows:
     internal: true
     dir: npm
     platforms: [windows]
@@ -223,7 +230,7 @@ tasks:
       - npm version {{.VERSION}} --no-git-tag-version --allow-same-version
       - echo "Updated package.json to version {{.VERSION}}"
 
-  npm:version:internal:
+  npm:version:unix:
     internal: true
     dir: npm
     platforms: [linux, darwin]

@@ -13,25 +13,28 @@ function getPlatform() {
   const platform = os.platform();
   const arch = os.arch();
 
-  if (platform === 'win32') {
-    return { os: 'Windows', arch: 'x86_64', ext: '.exe' };
-  }
-  
-  if (platform === 'darwin') {
-    if (arch === 'arm64') {
-      return { os: 'Darwin', arch: 'arm64', ext: '' };
-    }
-    return { os: 'Darwin', arch: 'x86_64', ext: '' };
-  }
-  
-  if (platform === 'linux') {
-    if (arch === 'arm64') {
-      return { os: 'Linux', arch: 'arm64', ext: '' };
-    }
-    return { os: 'Linux', arch: 'x86_64', ext: '' };
+  let osName, archName, ext, format;
+
+  if (platform === "win32") {
+    osName = "Windows";
+    archName = "x86_64";
+    ext = ".exe";
+    format = "zip";
+  } else if (platform === "darwin") {
+    osName = "Darwin";
+    archName = arch === "arm64" ? "arm64" : "x86_64";
+    ext = "";
+    format = "tar.gz";
+  } else if (platform === "linux") {
+    osName = "Linux";
+    archName = arch === "arm64" ? "arm64" : "x86_64";
+    ext = "";
+    format = "tar.gz";
+  } else {
+    throw new Error(`Unsupported platform: ${platform} ${arch}`);
   }
 
-  throw new Error(`Unsupported platform: ${platform} ${arch}`);
+  return { os: osName, arch: archName, ext, format };
 }
 
 function download(url, dest) {
@@ -64,60 +67,63 @@ function download(url, dest) {
 
 async function install() {
   try {
-    const { os: osName, arch, ext } = getPlatform();
+    const { os: osName, arch, ext, format } = getPlatform();
     const version = `v${PACKAGE_VERSION}`;
-    
-    // Construct download URL
-    const archiveName = `better-next-app_${PACKAGE_VERSION}_${osName}_${arch}.tar.gz`;
+
+    // Construct archive name and download URL
+    const archiveExt = format === "zip" ? ".zip" : ".tar.gz";
+    const archiveName = `better-next-app_${PACKAGE_VERSION}_${osName}_${arch}${archiveExt}`;
     const downloadUrl = `https://github.com/${REPO}/releases/download/${version}/${archiveName}`;
-    
-    console.log(`Downloading better-next-app ${version} for ${osName} ${arch}...`);
-    
-    const binDir = path.join(__dirname, '..', 'bin');
+
+    console.log(
+      `Downloading better-next-app ${version} for ${osName} ${arch}...`,
+    );
+    console.log(`URL: ${downloadUrl}`);
+
+    const binDir = path.join(__dirname, "..", "bin");
     if (!fs.existsSync(binDir)) {
       fs.mkdirSync(binDir, { recursive: true });
     }
 
     const archivePath = path.join(binDir, archiveName);
-    
+
     // Download the archive
     await download(downloadUrl, archivePath);
-    
-    console.log('Extracting binary...');
-    
-    // Extract the binary
-    if (osName === 'Windows') {
-      // For Windows, we need to handle .zip files
-      const zipName = `better-next-app_${PACKAGE_VERSION}_${osName}_${arch}.zip`;
-      const zipUrl = `https://github.com/${REPO}/releases/download/${version}/${zipName}`;
-      const zipPath = path.join(binDir, zipName);
-      
-      await download(zipUrl, zipPath);
-      
-      // Extract using PowerShell
-      execSync(`powershell -command "Expand-Archive -Path '${zipPath}' -DestinationPath '${binDir}' -Force"`, {
-        stdio: 'inherit'
+
+    console.log("Extracting binary...");
+
+    // Extract the binary based on format
+    if (format === "zip") {
+      // Windows: Extract using PowerShell
+      const psCommand = `Expand-Archive -Path "${archivePath}" -DestinationPath "${binDir}" -Force`;
+      execSync(`powershell -NoProfile -Command "${psCommand}"`, {
+        stdio: "inherit",
       });
-      
-      fs.unlinkSync(zipPath);
     } else {
-      // Extract tar.gz for Unix systems
+      // Unix: Extract tar.gz
       execSync(`tar -xzf "${archivePath}" -C "${binDir}"`, {
-        stdio: 'inherit'
+        stdio: "inherit",
       });
-      
-      fs.unlinkSync(archivePath);
     }
-    
+
+    // Clean up archive
+    fs.unlinkSync(archivePath);
+
     const binaryName = `better-next-app${ext}`;
     const binaryPath = path.join(binDir, binaryName);
-    
+
+    // Verify binary exists
+    if (!fs.existsSync(binaryPath)) {
+      throw new Error(`Binary not found after extraction: ${binaryPath}`);
+    }
+
     // Make binary executable on Unix systems
-    if (osName !== 'Windows') {
+    if (format !== "zip") {
       fs.chmodSync(binaryPath, 0o755);
     }
-    
-    console.log('✓ Installation complete!');
+
+    console.log("✓ Installation complete!");
+    console.log(`Binary installed at: ${binaryPath}`);
   } catch (error) {
     console.error('Installation failed:', error.message);
     console.error('\nYou can manually download the binary from:');

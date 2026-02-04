@@ -6,7 +6,8 @@
     "create-better-next-app": "./bin/create-better-next-app.js"
   },
   "scripts": {
-    "postinstall": "node ./scripts/install.js"
+    "postinstall": "node ./scripts/install.js",
+    "test-platform": "node ./scripts/test-install.js"
   },
   "keywords": [
     "nextjs",
@@ -36,5 +37,14 @@
     "bin",
     "scripts",
     "README.md"
+  ],
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
+  "cpu": [
+    "x64",
+    "arm64"
   ]
 }
