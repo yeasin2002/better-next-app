@@ -2,6 +2,17 @@
 
 This is a condensed guide for setting up NPM publishing. For detailed information, see [npm-publishing.md](./npm-publishing.md).
 
+## ⚠️ Important Update (December 9, 2025)
+
+NPM has permanently revoked all classic tokens. You **must** use Granular Access Tokens.
+
+**Key Changes:**
+- ❌ Classic tokens no longer work
+- ✅ Granular Access Tokens are now required
+- ⏰ Session tokens (from `npm login`) expire after 2 hours
+- 🔒 Must enable "Bypass 2FA" for CI/CD automation
+- ⏳ Write tokens limited to 90 days maximum
+
 ## Prerequisites
 
 - ✅ Node.js and npm installed
@@ -17,6 +28,8 @@ npm login
 ```
 
 Enter your NPM username, password, and email when prompted.
+
+**Note:** This creates a 2-hour session token for local use only. For CI/CD, you need a Granular Access Token (next step).
 
 ### Step 2: Verify Setup
 
@@ -37,14 +50,17 @@ This checks:
 
 1. **Go to:** https://www.npmjs.com/settings/YOUR_USERNAME/tokens
 2. **Click:** "Generate New Token"
-3. **Select:** "Granular Access Token" (not Classic)
+3. **Select:** "Granular Access Token" (only option available)
 4. **Configure:**
    - Token name: `better-next-app-ci`
-   - Expiration: `90 days` or `1 year`
+   - Expiration: `90 days` (maximum for write tokens)
    - Packages permission: `Read and write` ✅
+   - **Bypass 2FA:** `Enabled` ✅ (critical for CI/CD!)
    - Organizations permission: `No access`
 5. **Click:** "Generate token"
 6. **Copy:** The token immediately (starts with `npm_...`)
+
+**Important:** You MUST enable "Bypass 2FA for automation" or GitHub Actions will fail!
 
 ### Step 4: Add Token to GitHub
 
