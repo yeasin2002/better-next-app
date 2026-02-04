@@ -65,6 +65,33 @@ function download(url, dest) {
   });
 }
 
+function extractZip(archivePath, destDir) {
+  // Use PowerShell with .NET Framework method (more compatible)
+  const psScript = `
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    [System.IO.Compression.ZipFile]::ExtractToDirectory('${archivePath.replace(/\\/g, "\\\\")}', '${destDir.replace(/\\/g, "\\\\")}')
+  `;
+
+  try {
+    execSync(
+      `powershell -NoProfile -ExecutionPolicy Bypass -Command "${psScript}"`,
+      {
+        stdio: "inherit",
+        windowsHide: true,
+      },
+    );
+  } catch (error) {
+    // Fallback: try using tar command (available in Windows 10+)
+    try {
+      execSync(`tar -xf "${archivePath}" -C "${destDir}"`, {
+        stdio: "inherit",
+      });
+    } catch (tarError) {
+      throw new Error("Failed to extract zip file. Please extract manually.");
+    }
+  }
+}
+
 async function install() {
   try {
     const { os: osName, arch, ext, format } = getPlatform();
@@ -94,11 +121,8 @@ async function install() {
 
     // Extract the binary based on format
     if (format === "zip") {
-      // Windows: Extract using PowerShell
-      const psCommand = `Expand-Archive -Path "${archivePath}" -DestinationPath "${binDir}" -Force`;
-      execSync(`powershell -NoProfile -Command "${psCommand}"`, {
-        stdio: "inherit",
-      });
+      // Windows: Extract zip
+      extractZip(archivePath, binDir);
     } else {
       // Unix: Extract tar.gz
       execSync(`tar -xzf "${archivePath}" -C "${binDir}"`, {

@@ -1,6 +1,6 @@
 {
   "name": "create-better-next-app",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "description": "A high-performance CLI tool for scaffolding Next.js projects",
   "bin": {
     "create-better-next-app": "./bin/create-better-next-app.js"
